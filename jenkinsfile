@@ -7,7 +7,7 @@ for (int i = 1; i <= BATCH_COUNT; i++) {
     def batchName = "batch-${batchNumber}"
 
     serenityBatches[batchName] = {
-        node('Windows') {
+        node('windows') {
             checkout scm
             try {
 				if(isUnix()) {
@@ -35,7 +35,7 @@ stage("automated tests") {
 }
 
 stage("report aggregation") {
-    node('Windows') {
+    node('windows') {
         // unstash each of the batches
 		echo "Batch Count - ${BATCH_COUNT}"
         for (int i = 1; i <= BATCH_COUNT; i++) {
