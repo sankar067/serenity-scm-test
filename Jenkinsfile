@@ -6,7 +6,7 @@ def serenityBatches = [:]
 for (int i = 1; i <= BATCH_COUNT; i++) {
     def batchNumber = i
     def batchName = "batch-${batchNumber}"
-	if(i=1){
+	if(i==1){
 		def a="Test1"
 	}else{
 		def a="Test2"
