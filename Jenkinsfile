@@ -1,8 +1,8 @@
 int BATCH_COUNT = 2
 int FORK_COUNT = 2
 def serenityBatches = [:]
-List a = ['Test1','Test2']
-
+//List a = ['Test1','Test2']
+String[] a = ['Test1', 'Test2']
 for (int i = 1; i <= BATCH_COUNT; i++) {
     def batchNumber = i
     def batchName = "batch-${batchNumber}"
