@@ -134,7 +134,7 @@
         	    </dependency>
     		</dependencies>
 		<configuration>
-			<tags>${tags}<tags>
+			<tags>${tags}</tags>
 			<reports>single-page-html</reports>
 		</configuration>	
                 <executions>
