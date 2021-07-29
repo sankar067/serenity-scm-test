@@ -1,3 +1,7 @@
+	pipeline {
+    agent any
+		stages{
+			stage("git clone"){
 int BATCH_COUNT = 2
 int FORK_COUNT = 2
 def serenityBatches = [:]
@@ -12,10 +16,7 @@ for (int i = 1; i <= BATCH_COUNT; i++) {
     def batchNumber = i
     def batchName = "batch-${batchNumber}"
     def tagName = "${arr[i-1]}"
-	pipeline {
-    agent any
-		stages{
-			stage("git clone"){
+
     serenityBatches[batchName] = {
         node {
             checkout scm
