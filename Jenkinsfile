@@ -19,7 +19,7 @@ for (int i = 1; i <= BATCH_COUNT; i++) {
 				}else{
 				   env.JAVA_HOME="C:\\Sankar\\JenkinsSetUp\\openlogic-openjdk-8u262-b10-win-32"
 				   env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
-					bat "C:\\Sankar\\JenkinsSetUp\\apache-maven-3.5.3\\bin\\mvn.cmd  clean verify -Dmetafilter=${tagName} -Dwebdriver.driver=chrome -Dparallel.tests=${FORK_COUNT} -Dserenity.batch.count=${BATCH_COUNT} -Dserenity.batch.number=${batchNumber} -Dserenity.test.statistics.dir=/statistics -f pom.xml -Dmaven.surefire.debug=true"
+					bat "C:\\Sankar\\JenkinsSetUp\\apache-maven-3.5.3\\bin\\mvn.cmd  clean verify \"-Dmetafilter=${tagName}\" -Dwebdriver.driver=chrome -Dparallel.tests=${FORK_COUNT} -Dserenity.batch.count=${BATCH_COUNT} -Dserenity.batch.number=${batchNumber} -Dserenity.test.statistics.dir=/statistics -f pom.xml -Dmaven.surefire.debug=true"
 				}
             } catch (Throwable e) {
                 throw e
@@ -60,5 +60,21 @@ stage("report aggregation") {
                 alwaysLinkToLastBuild: true,
                 allowMissing: false
         ])
+    }
+  post {
+        always {
+            echo 'ExecutionResult'
+            
+//             emailext body: "Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}",
+//                 recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']],
+//                 subject: "Jenkins Job ${env.JOB_NAME}"
+            
+		emailext 
+// 		attachmentsPattern: "target/site/serenity/${file}",
+              to: "sk.behera@live.com",
+            from: "Jenkins",
+         subject: "Jenkins Job ${env.JOB_NAME}",
+            body: "Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}",
+        }
     }
 }
