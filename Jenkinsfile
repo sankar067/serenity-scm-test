@@ -37,12 +37,14 @@ stage("automated tests") {
    def RESULT_ARCHIVE="${BUILD_TAG}.zip"
    def RESULT_PATH="target/site/serenity"
    parallel serenityBatches
+			echo "${RESULT_ARCHIVE}"
+		echo "${RESULT_PATH}"
 }
 
 stage("report aggregation") {
     node {
         // unstash each of the batches
-		echo "Batch Count - ${BATCH_COUNT}"
+	echo "Batch Count - ${BATCH_COUNT}"
         for (int i = 1; i <= BATCH_COUNT; i++) {
             def batchName = "batch-${i}"
             echo "Unstashing serenity reports for ${batchName}"
@@ -65,7 +67,9 @@ stage("report aggregation") {
         ])
     }
 	stage("send email"){
-            
+		echo "${RESULT_ARCHIVE}"
+		echo "${RESULT_PATH}"
+		
 	emailext attachmentsPattern: '${RESULT_PATH}/serenity-summary.html', body: '''Results HTML Report file at ${BUILD_URL}/artifact/${RESULT_PATH}/index.html
 	-----------------------------------------------------------------------------------------------------------------------------------------------------------
 	RESULT SUMMARY:
