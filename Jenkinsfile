@@ -4,6 +4,10 @@ def serenityBatches = [:]
 //List a = ['Test1','Test2']
 def full_string = "Test1 Test2"
 def arr = full_string.split(" ")
+environment{
+	RESULT_ARCHIVE=${BUILD_TAG}.zip
+	RESULT_PATH=target/site/serenity
+        }
 for (int i = 1; i <= BATCH_COUNT; i++) {
     def batchNumber = i
     def batchName = "batch-${batchNumber}"
@@ -65,15 +69,11 @@ stage("report aggregation") {
         always {
             echo 'ExecutionResult'
             
-//             emailext body: "Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}",
-//                 recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']],
-//                 subject: "Jenkins Job ${env.JOB_NAME}"
-            
-		emailext attachmentsPattern: "target/site/serenity/serenity-summary.html",
-              to: "sk.behera@live.com",
-            from: "Jenkins",
-         subject: "Jenkins Job ${env.JOB_NAME}",
-	body: "Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}"
+	emailext attachmentsPattern: '${env.RESULT_PATH}/serenity-summary.html', body: '''Results HTML Report file at ${env.BUILD_URL}/artifact/${RESULT_PATH}/index.html
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+RESULT SUMMARY:
+
+${FILE,path="${env.RESULT_PATH}/summary.txt"}''', subject: 'Test Atomation Result of ${env.BUILD_NUMBER}', to: 'sk,behera@live.com'
         }
     }
 }
