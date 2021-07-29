@@ -4,10 +4,7 @@ def serenityBatches = [:]
 //List a = ['Test1','Test2']
 def full_string = "Test1 Test2"
 def arr = full_string.split(" ")
-environment{
-	RESULT_ARCHIVE=${BUILD_TAG}.zip
-	RESULT_PATH=target/site/serenity
-        }
+
 for (int i = 1; i <= BATCH_COUNT; i++) {
     def batchNumber = i
     def batchName = "batch-${batchNumber}"
@@ -37,6 +34,10 @@ for (int i = 1; i <= BATCH_COUNT; i++) {
 }
 
 stage("automated tests") {
+environment{
+	RESULT_ARCHIVE=${BUILD_TAG}.zip
+	RESULT_PATH=target/site/serenity
+        }
     parallel serenityBatches
 }
 
