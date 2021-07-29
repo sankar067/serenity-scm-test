@@ -46,7 +46,8 @@ agent any
                     parallel serenityBatches
             }
         }
-
+    }
+    stages{
 	stage("report aggregation") {
 		steps{
 	    node {
@@ -78,6 +79,7 @@ agent any
 		])
 	 }
 	}
+    }
 	  post {
 		always {
 		    echo 'ExecutionResult'
