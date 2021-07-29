@@ -36,49 +36,54 @@ for (int i = 1; i <= BATCH_COUNT; i++) {
     }
 }
 pipeline {
-    //agent any
+    agent any
     stages {
-stage("automated tests") {
-    parallel serenityBatches
-}
+	stage("automated tests") {
+		steps{
+	    		parallel serenityBatches
+		}
+	}
 
-stage("report aggregation") {
+	stage("report aggregation") {
+		steps{
+	    node {
+		// unstash each of the batches
+			echo "Batch Count - ${BATCH_COUNT}"
+		for (int i = 1; i <= BATCH_COUNT; i++) {
+		    def batchName = "batch-${i}"
+		    echo "Unstashing serenity reports for ${batchName}"
+		    unstash batchName
+		}
+	    }
+			steps{
+		//build report
 
-    node {
-        // unstash each of the batches
-		echo "Batch Count - ${BATCH_COUNT}"
-        for (int i = 1; i <= BATCH_COUNT; i++) {
-            def batchName = "batch-${i}"
-            echo "Unstashing serenity reports for ${batchName}"
-            unstash batchName
-        }
+		  bat "C:\\Sankar\\JenkinsSetUp\\apache-maven-3.5.3\\bin\\mvn.cmd serenity:aggregate"
+			}
+			steps{
+		// publish the Serenity report
 
-	//build report
-	  
-	  bat "C:\\Sankar\\JenkinsSetUp\\apache-maven-3.5.3\\bin\\mvn.cmd serenity:aggregate"
-	    
-        // publish the Serenity report
+		publishHTML(target: [
+			reportName : 'Serenity',
+			reportDir:   'target/site/serenity',
+			reportFiles: 'index.html',
+			keepAll:     true,
+			alwaysLinkToLastBuild: true,
+			allowMissing: false
+		])
+			}
+	    }
+	  post {
+		always {
+		    echo 'ExecutionResult'
 
-        publishHTML(target: [
-                reportName : 'Serenity',
-                reportDir:   'target/site/serenity',
-                reportFiles: 'index.html',
-                keepAll:     true,
-                alwaysLinkToLastBuild: true,
-                allowMissing: false
-        ])
-    }
-  post {
-        always {
-            echo 'ExecutionResult'
-            
-	emailext attachmentsPattern: '${env.RESULT_PATH}/serenity-summary.html', body: '''Results HTML Report file at ${env.BUILD_URL}/artifact/${RESULT_PATH}/index.html
-	-----------------------------------------------------------------------------------------------------------------------------------------------------------
-	RESULT SUMMARY:
+		emailext attachmentsPattern: '${env.RESULT_PATH}/serenity-summary.html', body: '''Results HTML Report file at ${env.BUILD_URL}/artifact/${RESULT_PATH}/index.html
+		-----------------------------------------------------------------------------------------------------------------------------------------------------------
+		RESULT SUMMARY:
 
-	${FILE,path="${env.RESULT_PATH}/summary.txt"}''', subject: 'Test Atomation Result of ${env.BUILD_NUMBER}', to: 'sk,behera@live.com'
-        }
-    }
+		${FILE,path="${env.RESULT_PATH}/summary.txt"}''', subject: 'Test Atomation Result of ${env.BUILD_NUMBER}', to: 'sk,behera@live.com'
+		}
+	    }
 }
 }
 }
