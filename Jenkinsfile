@@ -67,10 +67,10 @@ stage("report aggregation") {
     }
 	stage("send email"){
 		
-	emailext attachmentsPattern: 'target/site/serenity/serenity-summary.html', body: '''Results HTML Report file at ${env.BUILD_URL}/artifact/target/site/serenity/index.html
+		emailext attachmentsPattern: '${BUILD_URL}/target/site/serenity/serenity-summary.html', body: '''Results HTML Report file at ${BUILD_URL}/artifact/target/site/serenity/index.html
 	-----------------------------------------------------------------------------------------------------------------------------------------------------------
 	RESULT SUMMARY:
 
-	${FILE,path="target/site/serenity/summary.txt"}''', subject: 'Test Atomation Result of ${BUILD_NUMBER}', to: 'sk.behera@live.com'
+	${FILE,path="${BUILD_URL}/target/site/serenity/summary.txt"}''', subject: 'Test Atomation Result of ${BUILD_NUMBER}', to: 'sk.behera@live.com'
    }
 }
