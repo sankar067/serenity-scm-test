@@ -40,23 +40,24 @@ for (int i = 1; i <= BATCH_COUNT; i++) {
 pipeline {
 agent any
     stages {
-	stage("automated tests") {
-		steps{
-	    		parallel serenityBatches
-		}
-	}
+
+        stage("automated tests") {
+            steps{
+                    parallel serenityBatches
+            }
+        }
 
 	stage("report aggregation") {
 		steps{
 	    node {
 		// unstash each of the batches
 		echo "Batch Count - ${BATCH_COUNT}"
-		    step{
-			for (int i = 1; i <= BATCH_COUNT; i++) {
-			    def batchName = "batch-${i}"
-			    echo "Unstashing serenity reports for ${batchName}"
-			    unstash batchName
-			}
+		    steps{
+                for (int i = 1; i <= BATCH_COUNT; i++) {
+                    def batchName = "batch-${i}"
+                    echo "Unstashing serenity reports for ${batchName}"
+                    unstash batchName
+                }
 		    }
 	    }
 			
@@ -64,7 +65,7 @@ agent any
 	 //build report
 	 bat "C:\\Sankar\\JenkinsSetUp\\apache-maven-3.5.3\\bin\\mvn.cmd serenity:aggregate"
 	}
-			
+        		
 	steps{
 	     // publish the Serenity report
 	     publishHTML(target: [
