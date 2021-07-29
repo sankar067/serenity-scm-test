@@ -35,8 +35,7 @@ for (int i = 1; i <= BATCH_COUNT; i++) {
         }
     }
 }
-pipeline {
-    agent any
+
 stage("automated tests") {
     parallel serenityBatches
 }
@@ -66,26 +65,13 @@ stage("report aggregation") {
                 allowMissing: false
         ])
     }
-
-
-    stages {
-        stage('Send Email') {
-            steps {
-             node ('master'){
-                echo 'Send Email'
-            }
-        }
-        }
-    }
-    post { 
-        always { 
-            emailext attachmentsPattern: '${env.RESULT_PATH}/serenity-summary.html', body: '''Results HTML Report file at ${env.BUILD_URL}/artifact/${RESULT_PATH}/index.html
+	stage("send email"){
+            
+	emailext attachmentsPattern: '${env.RESULT_PATH}/serenity-summary.html', body: '''Results HTML Report file at ${env.BUILD_URL}/artifact/${RESULT_PATH}/index.html
 	-----------------------------------------------------------------------------------------------------------------------------------------------------------
 	RESULT SUMMARY:
 
 	${FILE,path="${env.RESULT_PATH}/summary.txt"}''', subject: 'Test Atomation Result of ${env.BUILD_NUMBER}', to: 'sk,behera@live.com'
-        }
-       
-    }
+   }
 }
 }
