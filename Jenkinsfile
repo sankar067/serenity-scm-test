@@ -69,12 +69,11 @@ stage("report aggregation") {
 //                 recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']],
 //                 subject: "Jenkins Job ${env.JOB_NAME}"
             
-		emailext 
-// 		attachmentsPattern: "target/site/serenity/${file}",
+		emailext attachmentsPattern: "target/site/serenity/serenity-summary.html",
               to: "sk.behera@live.com",
             from: "Jenkins",
          subject: "Jenkins Job ${env.JOB_NAME}",
-            body: "Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL"
+	body: "Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}\n \"${FILE,path=target/site/serenity/summary.txt\"}"
         }
     }
 }
