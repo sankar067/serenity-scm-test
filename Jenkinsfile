@@ -1,7 +1,4 @@
-	pipeline {
-    agent any
-		stages{
-			stage("git clone"){
+
 int BATCH_COUNT = 2
 int FORK_COUNT = 2
 def serenityBatches = [:]
@@ -12,32 +9,37 @@ environment{
 	RESULT_ARCHIVE=${BUILD_TAG}.zip
 	RESULT_PATH=target/site/serenity
         }
-for (int i = 1; i <= BATCH_COUNT; i++) {
-    def batchNumber = i
-    def batchName = "batch-${batchNumber}"
-    def tagName = "${arr[i-1]}"
 
-    serenityBatches[batchName] = {
-        node {
-            checkout scm
-            try {
-				if(isUnix()) {
-                sh "mvn clean"
-                sh "rm -rf target/site/serenity"
-                sh "clean verify -Dwebdriver.driver=chrome \"-Dmetafilter=+${tagName}\" -Dparallel.tests=${FORK_COUNT} -Dserenity.batch.count=${BATCH_COUNT} -Dserenity.batch.number=${batchNumber} -Dserenity.test.statistics.dir=/statistics -f pom.xml"
-				}else{
-				   env.JAVA_HOME="C:\\Sankar\\JenkinsSetUp\\openlogic-openjdk-8u262-b10-win-32"
-				   env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
-					bat "C:\\Sankar\\JenkinsSetUp\\apache-maven-3.5.3\\bin\\mvn.cmd  clean verify \"-Dmetafilter=+${tagName}\" -Dwebdriver.driver=chrome -Dparallel.tests=${FORK_COUNT} -Dserenity.batch.count=${BATCH_COUNT} -Dserenity.batch.number=${batchNumber} -Dserenity.test.statistics.dir=/statistics -f pom.xml -Dmaven.surefire.debug=true"
-				}
-            } catch (Throwable e) {
-                throw e
-            } finally {
-                stash name: batchName,
-                    includes: "target/site/serenity/**/*",
-                    allowEmpty: true
-            }
-        }
+pipeline {
+agent any
+stages{
+ stage("git clone"){
+
+	for (int i = 1; i <= BATCH_COUNT; i++) {
+	    def batchNumber = i
+	    def batchName = "batch-${batchNumber}"
+	    def tagName = "${arr[i-1]}"
+	    serenityBatches[batchName] = {
+		node {
+		    checkout scm
+		    try {
+					if(isUnix()) {
+			sh "mvn clean"
+			sh "rm -rf target/site/serenity"
+			sh "clean verify -Dwebdriver.driver=chrome \"-Dmetafilter=+${tagName}\" -Dparallel.tests=${FORK_COUNT} -Dserenity.batch.count=${BATCH_COUNT} -Dserenity.batch.number=${batchNumber} -Dserenity.test.statistics.dir=/statistics -f pom.xml"
+					}else{
+					   env.JAVA_HOME="C:\\Sankar\\JenkinsSetUp\\openlogic-openjdk-8u262-b10-win-32"
+					   env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
+						bat "C:\\Sankar\\JenkinsSetUp\\apache-maven-3.5.3\\bin\\mvn.cmd  clean verify \"-Dmetafilter=+${tagName}\" -Dwebdriver.driver=chrome -Dparallel.tests=${FORK_COUNT} -Dserenity.batch.count=${BATCH_COUNT} -Dserenity.batch.number=${batchNumber} -Dserenity.test.statistics.dir=/statistics -f pom.xml -Dmaven.surefire.debug=true"
+					}
+		    } catch (Throwable e) {
+			throw e
+		    } finally {
+			stash name: batchName,
+			    includes: "target/site/serenity/**/*",
+			    allowEmpty: true
+		    }
+		}
     }
 }
 		}
