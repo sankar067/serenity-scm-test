@@ -136,7 +136,7 @@
 		<configuration>
 			<tags>${tags}<tags>
 			<reports>single-page-html</reports>
-		</configtration>	
+		</configuration>	
                 <executions>
                     <execution>
                         <id>serenity-reports</id>
