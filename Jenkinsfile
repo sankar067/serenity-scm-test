@@ -2,15 +2,12 @@ int BATCH_COUNT = 2
 int FORK_COUNT = 2
 def serenityBatches = [:]
 //List a = ['Test1','Test2']
-a = ['Test1', 'Test2']
+def full_string = "Test1 Test2"
+def arr = full_string.split(" ")
 for (int i = 1; i <= BATCH_COUNT; i++) {
     def batchNumber = i
     def batchName = "batch-${batchNumber}"
-	if( i == 1) {
-		def tagName = "Test1"
-	}else if(i == 2) {
-		def tagName = "Test2"
-	}
+    def tagName = "${arr[i-1]}"
     serenityBatches[batchName] = {
         node {
             checkout scm
