@@ -135,7 +135,7 @@
     		</dependencies>
 		<configuration>
 			<tags>${tags}<tags>
-			<reports>single-page-html</report>
+			<reports>single-page-html</reports>
 		</configtration>	
                 <executions>
                     <execution>
