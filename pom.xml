@@ -130,13 +130,11 @@
 			<groupId>net.serenity-bdd</groupId>
 			<artifactId>serenity-single-page-report</artifactId>
 			<version>${serenity.version}</version>
-			<scope>test</scope>
         	    </dependency>
     		</dependencies>
 		<configuration>
 			<tags>${tags}</tags>
 			<reports>single-page-html</reports>
-			<scope>runtime</scope>
 		</configuration>	
                 <executions>
                     <execution>
