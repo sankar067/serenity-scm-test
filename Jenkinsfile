@@ -12,6 +12,10 @@ for (int i = 1; i <= BATCH_COUNT; i++) {
     def batchNumber = i
     def batchName = "batch-${batchNumber}"
     def tagName = "${arr[i-1]}"
+	pipeline {
+    agent any
+		stages{
+			stage("git clone"){
     serenityBatches[batchName] = {
         node {
             checkout scm
@@ -35,8 +39,8 @@ for (int i = 1; i <= BATCH_COUNT; i++) {
         }
     }
 }
-pipeline {
-    agent any
+		}
+	}
     stages {
 	stage("automated tests") {
 		steps{
