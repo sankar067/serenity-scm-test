@@ -35,12 +35,15 @@ for (int i = 1; i <= BATCH_COUNT; i++) {
         }
     }
 }
-
+pipeline {
+    //agent any
+    stages {
 stage("automated tests") {
     parallel serenityBatches
 }
 
 stage("report aggregation") {
+
     node {
         // unstash each of the batches
 		echo "Batch Count - ${BATCH_COUNT}"
@@ -65,7 +68,6 @@ stage("report aggregation") {
                 allowMissing: false
         ])
     }
-	stage("send email"){
   post {
         always {
             echo 'ExecutionResult'
@@ -77,5 +79,6 @@ stage("report aggregation") {
 	${FILE,path="${env.RESULT_PATH}/summary.txt"}''', subject: 'Test Atomation Result of ${env.BUILD_NUMBER}', to: 'sk,behera@live.com'
         }
     }
+}
 }
 }
