@@ -71,10 +71,10 @@ stage("report aggregation") {
             
 		emailext 
 // 		attachmentsPattern: "target/site/serenity/${file}",
-              to: "sk.behera@live.com",
-            from: "Jenkins",
-         subject: "Jenkins Job ${env.JOB_NAME}",
-            body: "Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}",
+              to: 'sk.behera@live.com',
+            from: 'Jenkins',
+         subject: 'Jenkins Job ${env.JOB_NAME}',
+            body: 'Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL'
         }
     }
 }
