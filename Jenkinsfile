@@ -65,15 +65,17 @@ stage("report aggregation") {
                 allowMissing: false
         ])
     }
+	stage("send email"){
   post {
         always {
             echo 'ExecutionResult'
             
 	emailext attachmentsPattern: '${env.RESULT_PATH}/serenity-summary.html', body: '''Results HTML Report file at ${env.BUILD_URL}/artifact/${RESULT_PATH}/index.html
------------------------------------------------------------------------------------------------------------------------------------------------------------
-RESULT SUMMARY:
+	-----------------------------------------------------------------------------------------------------------------------------------------------------------
+	RESULT SUMMARY:
 
-${FILE,path="${env.RESULT_PATH}/summary.txt"}''', subject: 'Test Atomation Result of ${env.BUILD_NUMBER}', to: 'sk,behera@live.com'
+	${FILE,path="${env.RESULT_PATH}/summary.txt"}''', subject: 'Test Atomation Result of ${env.BUILD_NUMBER}', to: 'sk,behera@live.com'
         }
     }
+}
 }
