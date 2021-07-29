@@ -46,6 +46,10 @@ stage("report aggregation") {
             unstash batchName
         }
 
+	//build report
+	  
+	  bat "C:\\Sankar\\JenkinsSetUp\\apache-maven-3.5.3\\bin\\mvn.cmd serenity:aggregate"
+	    
         // publish the Serenity report
 
         publishHTML(target: [
