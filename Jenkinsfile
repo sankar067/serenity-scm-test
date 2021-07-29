@@ -37,8 +37,7 @@ stage("automated tests") {
    def RESULT_ARCHIVE="${BUILD_TAG}.zip"
    def RESULT_PATH="target/site/serenity"
    parallel serenityBatches
-			echo "${RESULT_ARCHIVE}"
-		echo "${RESULT_PATH}"
+
 }
 
 stage("report aggregation") {
@@ -67,13 +66,11 @@ stage("report aggregation") {
         ])
     }
 	stage("send email"){
-		echo "${RESULT_ARCHIVE}"
-		echo "${RESULT_PATH}"
 		
-	emailext attachmentsPattern: '${RESULT_PATH}/serenity-summary.html', body: '''Results HTML Report file at ${BUILD_URL}/artifact/${RESULT_PATH}/index.html
+	emailext attachmentsPattern: 'target/site/serenity/serenity-summary.html', body: '''Results HTML Report file at ${env.BUILD_URL}/artifact/target/site/serenity/index.html
 	-----------------------------------------------------------------------------------------------------------------------------------------------------------
 	RESULT SUMMARY:
 
-	${FILE,path="${RESULT_PATH}/summary.txt"}''', subject: 'Test Atomation Result of ${BUILD_NUMBER}', to: 'sk.behera@live.com'
+	${FILE,path="target/site/serenity/summary.txt"}''', subject: 'Test Atomation Result of ${BUILD_NUMBER}', to: 'sk.behera@live.com'
    }
 }
