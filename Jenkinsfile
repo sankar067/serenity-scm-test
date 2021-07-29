@@ -35,7 +35,8 @@ for (int i = 1; i <= BATCH_COUNT; i++) {
         }
     }
 }
-
+pipeline {
+    agent any
 stage("automated tests") {
     parallel serenityBatches
 }
@@ -66,8 +67,7 @@ stage("report aggregation") {
         ])
     }
 
-pipeline {
-    agent any
+
     stages {
         stage('Send Email') {
             steps {
