@@ -67,8 +67,9 @@ stage("report aggregation") {
 			}
 		}
 		Write-Host  $testArray
+		
 	    '''
-	    echo "${testArray}"
+	    echo "${output}"
 	    /*Prints:
 	    value1
 	    */
@@ -76,7 +77,7 @@ stage("report aggregation") {
    }
 // 	    env.JAVA_HOME="C:\\Sankar\\JenkinsSetUp\\openlogic-openjdk-8u262-b10-win-32"
 // 	    env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
-            bat "C:\\Sankar\\JenkinsSetUp\\apache-maven-3.5.3\\bin\\mvn.cmd  verify \"-Dmetafilter=+${testArray}\" -Dwebdriver.driver=chrome -Dmaven.surefire.debug=true"
+            bat "C:\\Sankar\\JenkinsSetUp\\apache-maven-3.5.3\\bin\\mvn.cmd  verify \"-Dmetafilter=+${output}\" -Dwebdriver.driver=chrome -Dmaven.surefire.debug=true"
 	    
         // publish the Serenity report
 
