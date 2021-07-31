@@ -66,7 +66,7 @@ stage("report aggregation") {
 				$testArray.Add($var)
 			}
 		}
-		Write-Host  $testArray
+		Write-Output  $testArray
 		
 	    ''')
    }
