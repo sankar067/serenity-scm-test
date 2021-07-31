@@ -68,7 +68,7 @@ stage("report aggregation") {
 		}
 		Write-Host  $testArray
 	    '''
-	    println(output)
+// 	    println(output)
 	    /*Prints:
 	    value1
 	    */
