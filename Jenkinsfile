@@ -56,7 +56,7 @@ stage("report aggregation") {
 	   
 	script {
 		def output = powershell(returnStdout: true, script: '''
-		$File = get-content "C:\Users\sanka\Desktop\results.csv"
+		$File = get-content "target/site/serenity/results.csv"
 		$testArray = New-Object System.Collections.Generic.List[System.Object]
 		foreach ($line in $File){
 			$Arr = $line.Split(',')
