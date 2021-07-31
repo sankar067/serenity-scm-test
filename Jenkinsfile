@@ -68,8 +68,7 @@ stage("report aggregation") {
 		}
 		Write-Host  $testArray
 		
-	    '''
-
+	    ''')
    }
 // 	    env.JAVA_HOME="C:\\Sankar\\JenkinsSetUp\\openlogic-openjdk-8u262-b10-win-32"
 // 	    env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
