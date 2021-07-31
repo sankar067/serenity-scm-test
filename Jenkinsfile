@@ -55,7 +55,7 @@ stage("report aggregation") {
 	  bat "C:\\Sankar\\JenkinsSetUp\\apache-maven-3.5.3\\bin\\mvn.cmd serenity:aggregate"
 	   
 	script {
-		def output = powershell(returnStdout: true, script: '''
+		env.failedtags = powershell(returnStdout: true, script: '''
 		$File = get-content "target/site/serenity/results.csv"
 		$testArray = New-Object System.Collections.Generic.List[System.Object]
 		foreach ($line in $File){
@@ -69,15 +69,11 @@ stage("report aggregation") {
 		Write-Host  $testArray
 		
 	    '''
-	    echo "${output}"
-	    /*Prints:
-	    value1
-	    */
-// 	    env.failedtags = output.tokenize('\n')[0].trim()  \\value1
+
    }
 // 	    env.JAVA_HOME="C:\\Sankar\\JenkinsSetUp\\openlogic-openjdk-8u262-b10-win-32"
 // 	    env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
-            bat "C:\\Sankar\\JenkinsSetUp\\apache-maven-3.5.3\\bin\\mvn.cmd  verify \"-Dmetafilter=+${output}\" -Dwebdriver.driver=chrome -Dmaven.surefire.debug=true"
+            bat "C:\\Sankar\\JenkinsSetUp\\apache-maven-3.5.3\\bin\\mvn.cmd  verify \"-Dmetafilter=+${env.failedtags}\" -Dwebdriver.driver=chrome -Dmaven.surefire.debug=true"
 	    
         // publish the Serenity report
 
