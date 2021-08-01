@@ -58,19 +58,22 @@ stage("report aggregation") {
 		env.failedtags = powershell(returnStdout: true, script: '''
 		$File = get-content "target/site/serenity/results.csv"
 		$testArray = New-Object System.Collections.Generic.List[System.Object]
+		$str = "";
 		foreach ($line in $File){
 			$Arr = $line.Split(',')
 			if($Arr[2].indexof("SUCCESS") -gt 0){
 				$var = $Arr[1].split(" ")[0]
 				$var = $var -replace '"','+'
-				$testArray.Add($var)
+				#$testArray.Add($var)
+				$str = $str + $var +" "
 			}
 		}
-		Write-Host  $testArray
-		Write-Output  "$testArray"
+		Write-Host  $str.Trim()
+		Write-Output  $str.Trim()
 		
 	    ''')
    }
+   
 	    
 // 	    env.JAVA_HOME="C:\\Sankar\\JenkinsSetUp\\openlogic-openjdk-8u262-b10-win-32"
 // 	    env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
