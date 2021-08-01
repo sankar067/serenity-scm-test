@@ -79,6 +79,7 @@ stage("report aggregation") {
 // 	    env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
 	    echo "Failed Tags - ${env.failedtags}"
 	    def ftags = ${env.failedtags}
+	    echo "Failed Tags - ${ftags}"
             bat "C:\\Sankar\\JenkinsSetUp\\apache-maven-3.5.3\\bin\\mvn.cmd  verify \"-Dmetafilter=${ftags}\" -Dwebdriver.driver=chrome -f pom.xml -Dmaven.surefire.debug=true"
 	    
         // publish the Serenity report
