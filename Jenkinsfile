@@ -67,7 +67,7 @@ stage("report aggregation") {
 			}
 		}
 		Write-Host  $testArray
-		Write-Output  $testArray
+		Write-Output  "$testArray"
 		
 	    ''')
    }
