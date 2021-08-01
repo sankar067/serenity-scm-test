@@ -69,7 +69,7 @@ stage("report aggregation") {
 			}
 		}
 		Write-Host  $str
-		Write-Output  $str.Trim()
+		'Write-Output  $str.Trim()'
 		
 	    ''')
    }
