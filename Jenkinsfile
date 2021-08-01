@@ -68,8 +68,8 @@ stage("report aggregation") {
 				$str = $str + $var +" "
 			}
 		}
-		Write-Host  $str
-		'Write-Output  $str.Trim()'
+		#Write-Host  $str
+		Write-Output  '$str.Trim()'
 		
 	    ''')
    }
