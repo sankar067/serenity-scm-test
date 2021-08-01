@@ -69,7 +69,7 @@ stage("report aggregation") {
 			}
 		}
 		#Write-Host  $str
-		Write-Output  '$str.Trim()'
+		Write-Output  $str.Trim()
 		
 	    ''')
    }
@@ -79,6 +79,7 @@ stage("report aggregation") {
 // 	    env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
 	    echo "Failed Tags - ${failedtags}"
 // 	    def ftags = "${env.failedtags}.trim()"
+	    def ftags = ${failedtags}.replaceAll(~'/n','')
 // 	    echo "Failed Tags - ${ftags}"
             bat "C:\\Sankar\\JenkinsSetUp\\apache-maven-3.5.3\\bin\\mvn.cmd  verify -Dwebdriver.driver=chrome -f pom.xml -Dmaven.surefire.debug=true \"-Dmetafilter=${ftags}\""
 	    
