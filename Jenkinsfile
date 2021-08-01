@@ -55,7 +55,7 @@ stage("report aggregation") {
 	  bat "C:\\Sankar\\JenkinsSetUp\\apache-maven-3.5.3\\bin\\mvn.cmd serenity:aggregate"
 	   
 	script {
-		def failedtags = powershell(returnStdout: true, script: '''
+		env.failedtags = powershell(returnStdout: true, script: '''
 		$File = get-content "target/site/serenity/results.csv"
 		$testArray = New-Object System.Collections.Generic.List[System.Object]
 		$str = "";
@@ -77,9 +77,9 @@ stage("report aggregation") {
 	    
 // 	    env.JAVA_HOME="C:\\Sankar\\JenkinsSetUp\\openlogic-openjdk-8u262-b10-win-32"
 // 	    env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
-	    echo "Failed Tags - ${failedtags}"
+	    echo "Failed Tags - ${env.failedtags}"
 // 	    def ftags = "${env.failedtags}.trim()"
-	    def ftags = ${failedtags}.replaceAll(~'/n','')
+	    def ftags = ${env.failedtags}.replaceAll(~'/n','')
 // 	    echo "Failed Tags - ${ftags}"
             bat "C:\\Sankar\\JenkinsSetUp\\apache-maven-3.5.3\\bin\\mvn.cmd  verify -Dwebdriver.driver=chrome -f pom.xml -Dmaven.surefire.debug=true \"-Dmetafilter=${ftags}\""
 	    
