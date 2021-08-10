@@ -1,3 +1,3 @@
-# serenity-scm-test
+#serenity-scm-test
+Project using Serenity, JBehave And Jenkins Pipeline
 
-Test Project using Serenity, JBehave And Jenkins Pipeline
