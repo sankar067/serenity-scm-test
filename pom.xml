@@ -11,7 +11,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <serenity.version>2.4.51</serenity.version>
+        <serenity.version>3.0.5</serenity.version>
         <serenity.jbehave.version>1.46.0</serenity.jbehave.version>
 	<included.packages>-Dincluded.packages=com.sankar.serenity</included.packages>
 	<included.adapters>-Dincluded.adapters=coverage:complexity:dependency</included.adapters>
@@ -91,7 +91,7 @@
             </plugin> -->
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.22.1</version>
+                <version>3.0.0-M4</version>
                 <configuration>
                     <includes>
                         <include>**/*AcceptanceTestSuite*.java</include>
