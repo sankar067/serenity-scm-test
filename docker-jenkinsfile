@@ -1,0 +1,111 @@
+//variables
+int BATCH_COUNT = 2
+int FORK_COUNT = 2
+def serenityBatches = [:]
+def full_string = "Test1 Test2"
+def arr = full_string.split(" ")
+def network="jenkins-${BUILD_NUMBER}"
+def seleniumHub="selenium-hub-${BUILD_NUMBER}"
+def chrome="chrome-${BUILD_NUMBER}"
+def firefox="firefox-${BUILD_NUMBER}"
+def containertest="conatinertest-${BUILD_NUMBER}"
+
+for (int i = 1; i <= BATCH_COUNT; i++) {
+    def batchNumber = i
+    def batchName = "batch-${batchNumber}"
+    def tagName = "${arr[i-1]}"
+    serenityBatches[batchName] = {
+        node {
+			stage("Batch-${batchNumber}") {
+			    
+			    //clean workspace
+			    cleanWs()
+			    
+				// checkout scm
+				git 'https://github.com/sankar067/serenity-scm-test.git'
+				
+				try {
+					if(isUnix()) {
+						
+							sh "mvn clean"
+							sh "rm -rf target/site/serenity"
+							sh "clean verify \"-Dmetafilter=+${tagName}\" -Dparallel.tests=${FORK_COUNT} -Dserenity.batch.count=${BATCH_COUNT} -Dwebdriver.driver=firefox -Dwebdriver.remote.url=http://linuxlite-virtualbox:4444/wd/hub -Dserenity.batch.number=${batchNumber} -Dserenity.test.statistics.dir=/statistics -f pom.xml"
+					}else{
+					  env.JAVA_HOME="C:\\Sankar\\JenkinsSetUp\\openlogic-openjdk-8u262-b10-win-64"
+					  env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
+					  bat "C:\\Sankar\\JenkinsSetUp\\apache-maven-3.5.3\\bin\\mvn.cmd  clean verify \"-Dmetafilter=+${tagName}\" -Dwebdriver.driver=chrome -Dwebdriver.remote.url=http://localhost:4444/wd/hub -Dparallel.tests=${FORK_COUNT} -Dserenity.batch.count=${BATCH_COUNT} -Dserenity.batch.number=${batchNumber} -Dserenity.test.statistics.dir=/statistics -f pom.xml -Dmaven.surefire.debug=true"
+					}
+				} catch (Throwable e) {
+					throw e
+				} finally {
+					stash name: batchName,
+						includes: "target/site/serenity/**/*",
+						allowEmpty: true
+				}
+			}
+		}
+    }
+}
+
+stage("Setting Up Docker-Selenium Grid"){
+node {
+//existing docker image on system
+    bat "docker network create ${network}"
+    bat "docker run -d -p 4444:4444 --name ${seleniumHub} --network ${network} selenium/hub:3.141.59-20210311"
+    bat "docker run -d -e HUB_PORT_4444_TCP_ADDR=${seleniumHub} -e HUB_PORT_4444_TCP_PORT=4444 --network ${network} --name ${chrome} selenium/node-chrome-debug"
+    bat "docker run -d -e HUB_PORT_4444_TCP_ADDR=${seleniumHub} -e HUB_PORT_4444_TCP_PORT=4444 --network ${network} --name ${firefox} selenium/node-firefox-debug"
+   }
+}
+
+stage("automated tests") {
+   def RESULT_ARCHIVE="${BUILD_TAG}.zip"
+   def RESULT_PATH="target/site/serenity"
+   parallel serenityBatches
+
+}
+
+stage("report aggregation") {
+    node {
+        // unstash each of the batches
+	    echo "Batch Count - ${BATCH_COUNT}"
+        for (int i = 1; i <= BATCH_COUNT; i++) {
+            def batchName = "batch-${i}"
+            echo "Unstashing serenity reports for ${batchName}"
+            unstash batchName
+        }
+
+	//build report
+	  bat "C:\\Sankar\\JenkinsSetUp\\apache-maven-3.5.3\\bin\\mvn.cmd serenity:aggregate"
+	   
+	
+    // publish the Serenity report
+	publishHTML(target: [
+			reportName : 'Serenity',
+			reportDir:   'target/site/serenity',
+			reportFiles: 'index.html',
+			keepAll:     true,
+			alwaysLinkToLastBuild: true,
+			allowMissing: false
+	])
+   }
+}
+stage('Tearing Down Selenium Grid') {
+node{
+	 //remove all the containers and volumes
+	bat "docker rm -vf ${firefox}"
+	bat "docker rm -vf ${chrome}"
+	bat "docker rm -vf ${seleniumHub}"
+	bat "docker network rm ${network}"
+}
+
+stage("send email"){
+	node{
+	emailext attachmentsPattern: 'target/site/serenity/serenity-summary.html', body: '''Results HTML Report file at ${JOB_URL}/artifact/Serenity
+	
+	-----------------------------------------------------------------------------------------------------------------------------------------------------------
+	RESULT SUMMARY:
+
+	${FILE,path="target/site/serenity/summary.txt"}''', subject: 'Test Atomation Result of ${BUILD_NUMBER}', to: 'sankar067github@outlook.com'
+	}
+   }	
+}
