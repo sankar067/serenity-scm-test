@@ -1,0 +1,14 @@
+pipeline{
+    agent {
+        label 'slave'
+    }
+
+    stages{
+        stage("Test slave"){
+            steps{
+            sh 'java --version'
+            sh 'pwd'
+            }
+        }
+    }
+}
