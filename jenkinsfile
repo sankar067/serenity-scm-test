@@ -15,7 +15,7 @@ for (int i = 1; i <= BATCH_COUNT; i++) {
         try {
 		if(isUnix()) {
 			tools{
-				maven 'maven 3.8.6'
+				maven "maven 3.8.6"
 			}
 			
             sh '''
