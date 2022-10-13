@@ -82,7 +82,7 @@ stage("report aggregation") {
 	// 	Write-Output  ($str.Trim()) + '""'
 		
 	//     ''')
-   }
+   //}
    
 	    
 // 	    env.JAVA_HOME="C:\\Sankar\\JenkinsSetUp\\openlogic-openjdk-8u262-b10-win-32"
