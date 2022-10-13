@@ -14,10 +14,6 @@ for (int i = 1; i <= BATCH_COUNT; i++) {
             checkout scm
             try {
 				if(isUnix()) {
-				tools { 
-        			maven 'Maven 3.3.9' 
-        			jdk 'jdk8' 
-    				}
                 sh "mvn clean"
                 sh "rm -rf target/site/serenity"
                 sh "clean verify -Dwebdriver.driver=chrome \"-Dmetafilter=+${tagName}\" -Dparallel.tests=${FORK_COUNT} -Dserenity.batch.count=${BATCH_COUNT} -Dserenity.batch.number=${batchNumber} -Dserenity.test.statistics.dir=/statistics -f pom.xml"
