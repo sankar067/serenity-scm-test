@@ -14,7 +14,7 @@ for (int i = 1; i <= BATCH_COUNT; i++) {
             checkout scm
         try {
 		if(isUnix()) {
-			apt install maven
+			sh "apt install maven"
 			
             sh '''
                     echo "PATH = ${PATH}"
