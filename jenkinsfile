@@ -11,13 +11,10 @@ for (int i = 1; i <= BATCH_COUNT; i++) {
     def tagName = "${arr[i-1]}"
     serenityBatches[batchName] = {
         node {
-				tools{
-				maven "maven 3.8.6"
-			}
             checkout scm
         try {
 		if(isUnix()) {
-
+			apt install maven
 			
             sh '''
                     echo "PATH = ${PATH}"
