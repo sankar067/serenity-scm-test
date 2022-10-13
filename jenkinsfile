@@ -50,10 +50,10 @@ for (int i = 1; i <= BATCH_COUNT; i++) {
 stage("Setting Up Docker-Selenium Grid"){
 node {
 //existing docker image on system
-    bat "docker network create ${network}"
-    bat "docker run -d -p 4444:4444 --name ${seleniumHub} --network ${network} selenium/hub:3.141.59-20210311"
-    bat "docker run -d -e HUB_PORT_4444_TCP_ADDR=${seleniumHub} -e HUB_PORT_4444_TCP_PORT=4444 --network ${network} --name ${chrome} selenium/node-chrome-debug"
-    bat "docker run -d -e HUB_PORT_4444_TCP_ADDR=${seleniumHub} -e HUB_PORT_4444_TCP_PORT=4444 --network ${network} --name ${firefox} selenium/node-firefox-debug"
+    sh "docker network create ${network}"
+    sh "docker run -d -p 4444:4444 --name ${seleniumHub} --network ${network} selenium/hub:3.141.59-20210311"
+    sh "docker run -d -e HUB_PORT_4444_TCP_ADDR=${seleniumHub} -e HUB_PORT_4444_TCP_PORT=4444 --network ${network} --name ${chrome} selenium/node-chrome-debug"
+    sh "docker run -d -e HUB_PORT_4444_TCP_ADDR=${seleniumHub} -e HUB_PORT_4444_TCP_PORT=4444 --network ${network} --name ${firefox} selenium/node-firefox-debug"
    }
 }
 
@@ -75,8 +75,8 @@ stage("report aggregation") {
         }
 
 	//build report
-	  bat "C:\\Sankar\\JenkinsSetUp\\apache-maven-3.5.3\\bin\\mvn.cmd serenity:aggregate"
-	   
+	  //bat "C:\\Sankar\\JenkinsSetUp\\apache-maven-3.5.3\\bin\\mvn.cmd serenity:aggregate"
+	   sh "mvn serenity:aggregate"
 	
     // publish the Serenity report
 	publishHTML(target: [
@@ -92,10 +92,10 @@ stage("report aggregation") {
 stage('Tearing Down Selenium Grid') {
 node{
 	 //remove all the containers and volumes
-	bat "docker rm -vf ${firefox}"
-	bat "docker rm -vf ${chrome}"
-	bat "docker rm -vf ${seleniumHub}"
-	bat "docker network rm ${network}"
+	sh "docker rm -vf ${firefox}"
+	sh "docker rm -vf ${chrome}"
+	sh "docker rm -vf ${seleniumHub}"
+	sh "docker network rm ${network}"
 }
 
 stage("send email"){
